@@ -32,6 +32,11 @@ func TestJWTMiddleware_CheckJWT(t *testing.T) {
 
 			require.Error(t, m.CheckJWT(w, req))
 			assert.Equal(t, http.StatusUnauthorized, w.Code)
+
+			t.Run("JWTFromContextIsEmpty", func(t *testing.T) {
+				token := JWTFromContext(req.Context())
+				assert.Nil(t, token)
+			})
 		})
 
 		t.Run("AuthDisabled", func(t *testing.T) {
@@ -41,6 +46,11 @@ func TestJWTMiddleware_CheckJWT(t *testing.T) {
 
 			require.NoError(t, m.CheckJWT(w, req))
 			assert.Equal(t, http.StatusOK, w.Code)
+
+			t.Run("JWTFromContextIsEmpty", func(t *testing.T) {
+				token := JWTFromContext(req.Context())
+				assert.Nil(t, token)
+			})
 		})
 	})
 
@@ -51,6 +61,11 @@ func TestJWTMiddleware_CheckJWT(t *testing.T) {
 
 		require.NoError(t, m.CheckJWT(w, req))
 		assert.Equal(t, http.StatusOK, w.Code)
+
+		t.Run("JWTFromContextIsEmpty", func(t *testing.T) {
+			token := JWTFromContext(req.Context())
+			assert.Nil(t, token)
+		})
 	})
 
 	t.Run("RequiredCredentials", func(t *testing.T) {
@@ -60,6 +75,11 @@ func TestJWTMiddleware_CheckJWT(t *testing.T) {
 
 		require.Error(t, m.CheckJWT(w, req))
 		assert.Equal(t, http.StatusUnauthorized, w.Code)
+
+		t.Run("JWTFromContextIsEmpty", func(t *testing.T) {
+			token := JWTFromContext(req.Context())
+			assert.Nil(t, token)
+		})
 	})
 
 	t.Run("ValidToken", func(t *testing.T) {
@@ -74,6 +94,11 @@ func TestJWTMiddleware_CheckJWT(t *testing.T) {
 
 		require.NoError(t, m.CheckJWT(w, req))
 		assert.Equal(t, http.StatusOK, w.Code)
+
+		t.Run("JWTFromContextIsNotEmtpy", func(t *testing.T) {
+			token := JWTFromContext(req.Context())
+			assert.NotNil(t, token)
+		})
 	})
 
 	t.Run("InValidToken", func(t *testing.T) {
@@ -85,6 +110,11 @@ func TestJWTMiddleware_CheckJWT(t *testing.T) {
 
 		require.Error(t, m.CheckJWT(w, req))
 		assert.Equal(t, http.StatusUnauthorized, w.Code)
+
+		t.Run("JWTFromContextIsEmpty", func(t *testing.T) {
+			token := JWTFromContext(req.Context())
+			assert.Nil(t, token)
+		})
 	})
 }
 
